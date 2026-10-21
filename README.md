@@ -14,6 +14,13 @@
     pip install -e .
     ```
 
+## :book: Datasets
+**Datasets for Training**
+We use FFHQ for training. All of them are resized to 512x512.
+
+**Datasets for Testing**
+
+
 ## Train
  
 ```bash
