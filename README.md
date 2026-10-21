@@ -16,9 +16,11 @@
 
 ## :book: Datasets
 **Datasets for Training**
+
 We use [FFHQ](https://github.com/NVlabs/ffhq-dataset) for training. All of them are resized to 512x512.
 
 **Datasets for Testing**
+
 We use LFW-Test, and WebPhoto-Test as the real-world datasets. The download links can refer to [DAEFR](https://github.com/LIAGM/DAEFR) and [VQFR](https://github.com/TencentARC/VQFR).
 
 ## Train
