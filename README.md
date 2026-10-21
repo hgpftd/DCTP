@@ -1,6 +1,6 @@
 # Degradation-aware Generative Network with Controllable Texture Prompt for Blind Face Restoration
 
-## :book: Installation
+## :wrench: Installation
 1. Clone repo
     ```bash
     git clone https://github.com/hgpftd/DCTP
@@ -14,7 +14,7 @@
     pip install -e .
     ```
 
-## :book: Datasets
+## :open_file_folder: Datasets
 **Datasets for Training**
 
 We use [FFHQ](https://github.com/NVlabs/ffhq-dataset) for training. All of them are resized to 512x512.
@@ -23,13 +23,13 @@ We use [FFHQ](https://github.com/NVlabs/ffhq-dataset) for training. All of them 
 
 We use LFW-Test, and WebPhoto-Test as the real-world datasets. The download links can refer to [DAEFR](https://github.com/LIAGM/DAEFR) and [VQFR](https://github.com/TencentARC/VQFR).
 
-## Train
+## :rocket: Train
 Please modify `options/DCTP.yml` according to your needs.
 ```bash
 sh train.sh 
 ```
 
-## Inference
+## :sparkles: Inference
 
 Please adjust the model weight path, input path, and output path as needed.
 
@@ -38,7 +38,7 @@ python inference.py --model_path weights/net_g.pth --input data/LQ --output resu
 ```
 
 
-## :sparkles: Visual Results
+## :art: Visual Results
 <p align="center">
   <img src="imgs/realworld.png" width="90%" style="max-width: 100%; height: auto;" />
 </p>
@@ -47,7 +47,7 @@ python inference.py --model_path weights/net_g.pth --input data/LQ --output resu
 </p>
 
 
-## Acknowledgement
+## :heart: Acknowledgement
 
 This project is based on [GCFSR](https://github.com/hejingwenhejingwen/GCFSR) and [BasicSR](https://github.com/XPixelGroup/BasicSR). Thanks for their awesome work.
 
