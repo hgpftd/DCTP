@@ -14,6 +14,18 @@
     pip install -e .
     ```
 
+## Train
+ 
+```bash
+sh train.sh 
+```
+
+## Inference
+
+```bash
+python inference.py --model_path weights/net_g.pth --input data/LQ --output results/restored 
+```
+
 
 ## :sparkles: Visual Results
 <p align="center">
