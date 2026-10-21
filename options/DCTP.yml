@@ -1,0 +1,162 @@
+# general settings
+name: DCTP
+model_type: DCTP_Real_Model
+num_gpu: 4  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+ 
+# dataset and data loader settings
+datasets:
+  train:
+    name: FFHQ
+    type: FFHQ_control_Dataset
+    dataroot_gt: /data2/lihaifeng/Face/train/FFHQ512
+    io_backend:
+      type: disk
+
+    use_hflip: true
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    out_size: 512
+    blur_kernel_size: 41
+    kernel_list: ['iso', 'aniso']
+    kernel_prob: [0.5, 0.5]
+    blur_sigma: [0.1, 10]
+    downsample_range: [0.8,8]
+    noise_range: [0, 20]
+    jpeg_range: [60, 100]
+ 
+    use_shuffle: true
+    num_worker_per_gpu: 4
+    batch_size_per_gpu: 2
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    # Please modify accordingly to use your own validation
+    # Or comment the val block if do not need validation during training
+    name: validation
+    type: SingleImage_GT_Dataset
+    dataroot_lq: /home/lihaifeng/MDGAN0/deg_all_lr
+    # margin_list: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
+    out_size: 512
+    io_backend:
+      type: disk
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+
+# network structures
+network_g:
+  type: DCTP
+  out_size: 512
+  num_style_feat: 512
+  channel_multiplier: 2
+  narrow: 1
+
+network_d:
+  type: StyleGAN2Discriminator_no_std
+  out_size: 512
+  channel_multiplier: 2
+  resample_kernel: [1, 3, 3, 1]
+
+network_d_high:
+  type: SWADiscriminator
+  out_size: 512
+  channel_multiplier: 2
+  resample_kernel: [1, 3, 3, 1]
+
+
+# path
+path:
+  pretrain_network_g: ~
+  strict_load_g: true
+  pretrain_network_d: ~
+  resume_state: ~
+
+# training settings
+train:
+  optim_g:
+    type: Adam
+    lr: !!float 2e-3
+
+  optim_d:
+    type: Adam
+    lr: !!float 2e-3
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [200000,400000]
+    gamma: 0.5
+
+  total_iter: 600000
+  warmup_iter: -1  # no warm up
+
+  # losses
+  gan_opt:
+    type: GANLoss
+    gan_type: wgan_softplus
+    loss_weight: !!float 1.0
+
+  high_gan_opt:
+    type: GANLoss
+    gan_type: wgan_softplus
+    loss_weight: !!float 1.0
+
+
+  pixel_opt:
+    type: L1Loss
+    loss_weight: !!float 1.0
+    reduction: mean
+
+  # component_opt:
+  #   type: MSELoss
+  #   loss_weight: !!float 2e-1
+  #   reduction: mean
+  # niqe_opt:
+  #   type: NIQELoss
+  #   loss_weight: !!float 1
+
+  perceptual_opt:
+    type: PerceptualLoss
+    layer_weights:
+      'conv4_3': 1  # before relu
+    vgg_type: vgg16
+    use_input_norm: true
+    range_norm: true
+    perceptual_weight: !!float 1
+    style_weight: 0
+    criterion: l1
+
+  # r1 regularization for discriminator
+  r1_reg_weight: 10
+  # path length regularization for generator
+  path_batch_shrink: 2
+  path_reg_weight: 2
+
+  net_g_reg_every: 4
+  net_d_reg_every: 16
+  mixing_prob: 0.9
+
+  net_d_iters: 1
+  net_d_init_iters: 0
+
+# validation settings
+val:
+  val_freq: 2500
+  save_img: true
+  num_val_samples: 3
+ 
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 10000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29501
+
+find_unused_parameters: false
